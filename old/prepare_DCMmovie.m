@@ -4,7 +4,7 @@ function mov=prepare_DCMmovie(posterior,out)
 
 %% loop
 % get timeseries
-[XS,dfdx,n_t,YS]=simulate_micro_u(out,posterior);
+[XS,dfdx,n_t,YS,US]=simulate_micro_u(out,posterior);
 
 nodes_idx = out.options.inF.n5;
 n_nodes = numel(nodes_idx);
@@ -23,7 +23,7 @@ mov(t).connectivity = connectivity -  diag(diag(connectivity));
 mov(t).connectivity = mov(t).connectivity(:);
 mov(t).pattern = get_pattern(out);
 mov(t).time = (t-1)*out.options.inF.deltat;
-mov(t).input = out.u(:,t)';
+mov(t).input = US(:,t)';
 
 end
 
@@ -42,11 +42,17 @@ end
 
 end
 
-function [XS,dfdx,n_t,YS]=simulate_micro_u(out,posterior)
+function [XS,dfdx,n_t,YS,US]=simulate_micro_u(out,posterior)
     n_t = out.dim.n_t*out.options.decim;
     Theta = posterior.muTheta;
     Phi = posterior.muPhi;
-    US = out.u;
+    if out.options.microU
+    	US = out.u;
+    else
+        for iu=1:out.dim.u
+            US(iu,:) = vec(repmat(out.u(iu,:),out.options.decim,1))' ;
+        end
+    end
     inF = out.options.inF;
     inG = out.options.inG;
     
