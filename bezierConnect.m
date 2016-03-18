@@ -1,4 +1,4 @@
-function h=bezierConnect(points)
+function bezierConnect(points)
 %
 set(gca,'Units','Points');
 p=get(gca,'Position');
@@ -11,7 +11,7 @@ yL = ylim;
 width = min([xL(2)-xL(1), yL(2)-yL(1)]);
 
 
-center = [mean(xL),mean(yL)];
+center = [0 0 0];
 
 EXCENTRICITY = .2;
 
@@ -93,7 +93,7 @@ if dim_points == 2
     scatter(points(:,1),points(:,2),radius^2,'fill');
 else
     
-plot3(x,y,z,'LineWidth',8,'LineSmoothing','on');
+plot3(x,y,z,'LineWidth',5,'LineSmoothing','on');
 r=.08;
 for i=1:n_points
     [xp,yp,zp] = sphere();
